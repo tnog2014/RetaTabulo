@@ -1,0 +1,269 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title th:text="#{page.user_edit.title}"></title>
+</head>
+<body>
+<div id="nav" th:replace="~{components/nav}"></div>
+<br>
+<div class="container">
+<div class="alert alert-warning" role="alert" th:if="${message}" th:text="${message}"></div>
+	<form id="form_main" method="post" th:action="@{/user/edit}" th:object="${userForm}">
+		<input type="hidden" id="from", th:field="*{from}">
+		<input type="hidden" th:field="*{id}">
+		<div th:if="${debug}" class="form-group">
+			<label for="id" th:text="#{common.user_id}"></label>
+			<input type="text" class="form-control col-sm-6" id="debug_id" th:attr="value='' + *{id}" readonly>
+		</div>
+		<div class="form-group">
+			<label for="userName" th:text="#{common.user}"></label>
+			<input type="text" class="form-control col-sm-6" id="userName" th:field="*{userName}" th:errorclass="fieldError"  th:readonly="${readonly == true}">
+			<span id="err_userName" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color: red"></span>
+		</div>
+		<div class="form-group form-check">
+			<input type="checkbox" class="form-check-input"  th:field="*{changePassword}" id="changePassword"  th:disabled="${readonly == true}">
+			<label class="form-check-label" for="changePassword" th:text="#{page.user_edit.change_password}"></label>
+		</div>
+		<th:block th:if="${noOldPassword == false}">
+			<div class="form-group passwordForm">
+				<label for="oldPassword" th:text="#{common.current_password}"></label>
+				<input type="password" class="form-control col-sm-6" id="oldPassword" th:field="*{oldPassword}" th:errorclass="fieldError">
+				<span id="err_oldPassword" th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}" style="color: red"></span>
+				<span id="err_oldPassword" th:if="${passwordNotMatch}" style="color: red" th:text="#{message.password_not_match}"></span>
+			</div>
+		</th:block>
+		<div class="form-group passwordForm">
+			<label for="password" th:text="#{common.new_password}"></label>
+			<input type="password" class="form-control col-sm-6" id="password" th:field="*{password}" th:errorclass="fieldError">
+			<span id="err_password" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red"></span>
+		</div>
+		<div class="form-group passwordForm">
+			<label for="cnfPassword" th:text="#{common.confirm_password}"></label>
+			<input type="password" class="form-control col-sm-6" id="cnfPassword" th:field="*{cnfPassword}" th:errorclass="fieldError">
+			<span id="err_cnfPassword" th:if="${#fields.hasErrors('cnfPassword')}" th:errors="*{cnfPassword}" style="color: red"></span>
+			<span id="err_cnfPasswordMatch" th:if="${#fields.hasErrors('cnfPasswordMatch')}" th:errors="*{cnfPasswordMatch}" style="color: red"></span>
+		</div>
+		<div class="form-group">
+			<label for="nickname" th:text="#{common.nickname}"></label>
+			<input type="text" class="form-control col-sm-6" id="nickname" th:field="*{nickname}" th:errorclass="fieldError" th:readonly="${readonly == true}">
+			<span id="err_nickname" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}" style="color: red"></span>
+		</div>
+		<div class="form-group">
+			<label for="valid" th:text="#{common.validity_of_account}"></label>
+			<select class="form-control col-sm-3" id="valid" th:field="*{valid}" th:errorclass="fieldError" th:disabled="${readonly == true}">
+				<option value="1" th:text="#{common.valid}"></option>
+				<option value="0" th:text="#{common.invalid}"></option>
+			</select>
+			<span id="err_valid" th:if="${#fields.hasErrors('valid')}" th:errors="*{valid}" style="color: red"></span>
+		</div>
+		<div class="form-group" th:if="${admin == true}">
+			<label for="level" th:text="#{common.authorization}"></label>
+			<select class="form-control col-sm-3" id="level" th:field="*{level}" th:errorclass="fieldError" th:disabled="${readonly == true}">
+				<option value="0" th:text="#{common.normala}"></option>
+				<option value="1" th:text="#{common.administrator}"></option>
+			</select>
+			<span id="err_level" th:if="${#fields.hasErrors('level')}" th:errors="*{level}" style="color: red"></span>
+		</div><br>
+		<input type="hidden" id="currentAssignedTeams" th:field="${userForm.currentAssignedTeams}">
+		<input type="hidden" id="assignedTeams" th:field="${userForm.assignedTeams}">
+		<input type="hidden" id="unassignedTeams" th:field="${userForm.unassignedTeams}">
+		<input type="hidden" id="currentAssignedAdminTeams" th:field="${userForm.currentAdminTeams}">
+		<input type="hidden" id="assignedAdminTeams" th:field="${userForm.assignedAdminTeams}">
+		<input type="hidden" id="unassignedAdminTeams" th:field="${userForm.unassignedAdminTeams}">
+		<div id="selectTeams">
+		<p th:text="#{common.assign_teams}"></p>
+		<table class="table table-hover col-lg-12">
+			<thead>
+				<tr>
+					<th th:if="${debug}" scope="col" th:text="#{common.team_id}"></th>
+					<th scope="col" th:text="#{common.team}"></th>
+					<th scope="col" th:text="#{common.description}"></th>
+					<th scope="col" th:text="#{common.accessible}"></th>
+					<th scope="col" th:text="#{common.admin}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="data : ${userForm.teamForms}" th:object="${data}" scope="row">
+					<td th:if="${debug}" th:text="*{id}"></td>
+					<td th:text="*{name}"></td>
+					<td th:text="*{description}"></td>
+					<td>
+						<input type="checkbox" class="cbs" th:attr="id='cb_' + *{id} + ''" th:disabled="${readonly == true}"/>
+					</td>
+					<td>
+						<input type="checkbox" class="cbs_adm" th:attr="id='cbadm_' + *{id} + ''" th:disabled="${readonly == true || admin != true}"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		<div class="button-area">
+			<th:block th:if="${readonly == false}">
+				<button type="button" id="btn_submit" class="btn btn-info" th:text="#{common.update}"></button>
+				<button type="button" class="btn btn-secondary" th:attr="onclick='setLocationHref(\'' + ${userForm.from} + '\')'" th:text="#{common.cancel}"></button>
+			</th:block>
+			<th:block th:if="${readonly == true}">
+				<button type="button" class="btn btn-secondary" th:attr="onclick='setLocationHref(\'' + ${userForm.from} + '\')'" th:text="#{common.back}"></button>
+			</th:block>
+
+		</div>
+		</form>
+	</div>
+	<script th:src="@{/js/jquery-3.5.0.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/underscore-min.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:inline="javascript">/*<![CDATA[*/
+	var admin = /*[(${admin})]*/;
+	var readonly = /*[(${readonly})]*/;
+/*]]>*/</script>
+	<script>
+
+		var items = ["userName", "oldPassword", "password", "cnfPassword", "cnfPasswordMatch", "nickname", "valid", "level"];
+
+		/*
+		 * Check the boxes based on the hidden parameters.
+		 */
+		function expandCurrentAssignedTeams(elementId, checkBoxClassName, check){
+			// console.log("expandCurrentAssignedTeams:"+elementId + ",className["+checkBoxClassName+"]");
+
+			var assigned = $(elementId).val();
+			var items = [];
+			if(assigned.length > 0){
+				items = assigned.split(",");
+			}
+			_.each(items, function(elem, i){
+				$("#" + elem).prop('checked', check);
+
+			});
+			// Copy the initial check status to the data attrbute "init_state".
+			$(checkBoxClassName).each(function(index, element){
+				$(element).data("init_state",$(element).prop('checked'));
+			});
+
+		}
+
+		function collectCheckedStatus(checkBoxClassName){
+			var assigned = [];
+			var unassigned = [];
+			$(checkBoxClassName).each(function(index, element){
+				var id = $(element).attr('id');
+				var init = $(element).data('init_state');
+				var now = $(element).prop('checked');
+				//console.log("check status:[" + id + "]"+ init + " -> " + now);
+
+				// Check status: false -> true
+				if(init == false && now == true){
+					assigned.push(id);
+				}
+
+				// Check stauts: true -> false
+				if(init == true && now == false){
+					unassigned.push(id);
+				}
+
+			});
+			return { "assigned": assigned.join(','), "unassigned": unassigned.join(',')};
+		}
+
+		$(function(){
+
+			$('#level').change(function(){
+				val = $(this).val();
+				if(val == '1'){
+					$('#selectTeams').hide();
+				} else {
+					$('#selectTeams').show();
+				}
+			});
+			$('#level').trigger('change');
+
+			// Change the language with confirmation.
+			setUpLocaleChangeWithConfirmation(!readonly);
+
+			processValidation(items);
+
+			expandCurrentAssignedTeams("#currentAssignedTeams", ".cbs", true);
+			expandCurrentAssignedTeams("#currentAssignedAdminTeams", ".cbs_adm", true);
+
+			expandCurrentAssignedTeams("#assignedTeams", ".cbs", true);
+			expandCurrentAssignedTeams("#assignedAdminTeams", ".cbs_adm", true);
+
+			expandCurrentAssignedTeams("#unassignedTeams", ".cbs", false);
+			expandCurrentAssignedTeams("#unassignedAdminTeams", ".cbs_adm", false);
+
+			$('#btn_submit').click(function(){
+				var accessibleTeams = collectCheckedStatus(".cbs");
+				var adminTeams = collectCheckedStatus(".cbs_adm");
+				$('#assignedTeams').val(accessibleTeams['assigned']);
+				$('#unassignedTeams').val(accessibleTeams['unassigned']);
+				$('#assignedAdminTeams').val(adminTeams['assigned']);
+				$('#unassignedAdminTeams').val(adminTeams['unassigned']);
+				$('#form_main').submit();
+			});
+
+			if($('#changePassword').prop("checked")){
+				$('.passwordForm').show();
+			} else {
+				$('.passwordForm').hide();
+			}
+			$('#changePassword').on('change', function(){
+				var checked = $('#changePassword').prop('checked');
+				if(checked){
+					$('.passwordForm').show();
+				} else {
+					$('.passwordForm').hide();
+				}
+			});
+
+
+			// Only full admin can change the state of team administrators.
+			if(admin != "true"){
+				$('.cbs_adm').each(function(index, element){
+					var checked = $(element).prop('checked');
+					if(checked){
+						$(element).closest('tr').find('.cbs').prop('disabled', true);
+					}
+				});
+			}
+
+			// If an admin checkbox is checked, check and disable the corresponding access checkbox.
+			$('.cbs_adm').change(function(){
+				var $cbs_adm = $(this);
+				var checked = $cbs_adm.prop('checked');
+				var $access = $cbs_adm.closest('tr').find('.cbs');
+				$access.prop('checked', true);
+				$access.prop('disabled', checked);
+			});
+
+		})
+	</script>
+</body>
+</html>

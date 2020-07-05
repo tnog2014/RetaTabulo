@@ -1,0 +1,738 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <script th:src="@{/js/jquery-3.5.0.js}"></script>
+    <script th:src="@{/js/jquery.event.dblTap.js}"></script>
+
+    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+
+	<style>
+		#canvas {
+			border: solid 1px black;
+			margin: 10px;
+		}
+		.ql-editor {
+
+		}
+		#canvas2 {
+
+ 		}
+
+		.desc {
+			padding:5px;
+			/* font-family: HuiFontP109;*/
+		}
+
+		#canvas2 .ui-widget-content {
+			border:none;
+			background-color: transparent;
+		}
+
+		.desc_opaque {
+			opacity: 0.55;
+			padding:5px;
+		}
+
+		.desc:hover {
+			opacity: 0.55;
+			background-color: #eee!important;
+			padding:5px;
+		}
+
+		#editor {
+			width: 100%;
+			height:100%;
+		}
+
+		.desc p {
+			margin:0;
+			padding:0
+		}
+
+		.desc_opaque p {
+			margin:0;
+			padding:0
+		}
+
+		.ql-editor {
+			height: 100px!important;
+		}
+
+		#userList {
+			position: fixed;
+			top: 60px;
+			right: 50px;
+			text-align: left;
+			z-index:10000;
+		}
+
+		#userListInner {
+			background-color: white;
+			border: 1px solid black;
+			padding: 2px 8px;
+			box-shadow: 2px 2px 4px gray;
+		}
+
+		#userListNumArea {
+			background-color: white;
+			border: 1px solid black;
+			padding: 2px 8px;
+			box-shadow: 2px 2px 4px gray;
+		}
+
+		/* Context menu */
+		.ui-menu {
+			width: 100px;
+		}
+
+		.ui-menu kbd {
+			padding-left: 1em;
+			float: right;
+		}
+
+		.selected {
+			border: 1px solid #ddd!important;
+		}
+
+		.ui-dialog .ui-dialog-buttonpane {
+			padding: 0!important;
+		}
+
+		.ui-dialog .ui-dialog-content {
+			padding: 0 5px!important;
+		}
+
+		.board-title {
+			font-size: 20pt;
+			margin-left: 20px
+		}
+    </style>
+
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/underscore-min.js}"></script>
+	<script th:src="@{/jquery-ui-1.12.1/jquery-ui.js}"></script>
+	<script th:src="@{/js/jquery.ui.touch-punch.js}"></script>
+	<link th:href="@{/jquery-ui-1.12.1/jquery-ui.css}" rel="stylesheet">
+	<link th:href="@{/jquery-ui-1.12.1/jquery-ui.theme.css}" rel="stylesheet">
+	<link th:href="@{/jquery-ui-1.12.1/jquery-ui.structure.css}" rel="stylesheet">
+
+ 	<!-- highlight.js should be read before quill. -->
+	<link rel="stylesheet"
+		th:href="@{/css/highlightjs/default.min.css}">
+	<script th:src="@{/js/highlightjs/highlight.min.js}"></script>
+
+	<link th:href="@{/css/quill.snow.css}" rel="stylesheet">
+	<script th:src="@{/js/quill.js}"></script>
+	<script th:src="@{/js/canvas.js}"></script>
+
+	<script th:src="@{/js/taphold.js}"></script>
+	<script th:src="@{/js/jquery.ui-contextmenu.min.js}"></script>
+
+<script th:inline="javascript">/*<![CDATA[*/
+var userId = /*[(${commonForm.loginUserId})]*/ null;
+var userList = /*[(${userList})]*/ [];
+var userName = "[(${commonForm.loginUserName})]";
+var boardId = /*[(${boardId})]*/ null;
+var descs = /*[(${descs})]*/ [];
+
+// Period of connection check (in seconds)
+var connectionCheckInterval = /*[(${connectionCheckInterval})]*/;
+
+// Period of connection notification (in seconds)
+var sendBeaconInterval = /*[(${sendBeaconInterval})]*/;
+
+var MESSAGE_CONNECTION_LOST = "[(#{message.board.connection_lost})]";
+var MENU_EDIT = "[(#{message.board.menu.edit})]";
+var MENU_COPY = "[(#{message.board.menu.copy})]";
+var MENU_REMOVE = "[(#{message.board.menu.remove})]";
+var MENU_CREATE = "[(#{message.board.menu.create})]";
+var DIALOG_CANCEL = "[(#{message.board.dialog.cancel})]";
+var DIALOG_SAVE = "[(#{message.board.dialog.save})]";
+var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
+/*]]>*/</script>
+
+<script type="text/javascript">
+
+	var selectedDescs = [];
+
+	var editing = false;
+
+	function select(e) {
+		var target = e.target;
+
+		if (!e.ctrlKey){
+			// Release all the selected states if CTRL is not pressed.
+        	selectedDescs = [];
+    		$('.desc').each(function(index, element){
+    			$(element).closest('.desc').removeClass('selected');
+    		});
+        }
+
+		$(target).closest('.desc').addClass('selected');
+		var id = $(target).closest('.desc').attr('id');
+
+		selectedDescs.push(id);
+		// console.log("selectedDescs="+selectedDescs);
+	}
+
+	function unselect(e){
+		unselect_inner();
+	}
+
+	function unselect_inner(){
+		$('.desc').each(function(index, element){
+			$(element).closest('.desc').removeClass('selected');
+		});
+		selectedDescs = [];
+	}
+
+	function onDblClick(e) {
+		if(!checkConnectionInner()){
+			return;
+		};
+		showDialog();
+		var top = $('#canvas').offset().top;
+		var left = $('#canvas').offset().left;
+		var x = e.pageX - left;
+        var y = e.pageY - top;
+        $('#editorData').data({x: x, y: y});
+	}
+
+	var quill;
+
+	function init(descs){
+
+		_.each(descs, function(desc){
+			var row = {};
+			row["type"] = "create";
+			row["id"] = desc.id;
+			row["data"] = JSON.stringify(desc);
+			row["init"] = true;
+			processDesc(row);
+		})
+	}
+
+	function processDesc(obj){
+		data = JSON.parse(obj.data);
+
+		var top = $('#canvas').offset().top;
+		var left = $('#canvas').offset().left;
+
+		if(obj.type == "create"){
+			$div = $('<div></div>');
+			$divInner = $('<div class="descInner"></div>');
+			$divName = $ ('<div class="descInfo" style="font-size:9pt;right:0;bottom:-18px;position:absolute">(<span class="create">/</span>/<span class="update"></span>)</div>');
+
+			createName = data.create_name;
+			if(createName == null){
+				createName = "-";
+			}
+			updateName = data.update_name;
+			if(updateName == null){
+				updateName = "-";
+			}
+			$divName.find("span.create").text(createName);
+			$divName.find("span.update").text(updateName);
+			if(data.id != null){
+				$div.attr("id", data.id);
+			}
+
+			$divInner.html(data.html);
+
+			var raw = null;
+			if(data.raw!=null){
+				var tmp = data.raw;
+				tmp = tmp.replace(/\r\n/g, "\\n");
+				tmp = tmp.replace(/\n/g, "\\n");
+				raw = JSON.parse(tmp);
+			}
+
+			$divInner.data("raw", raw);
+			$div.addClass("desc draggable ui-widget-content hasmenu");
+			$div.append($divInner);
+			$div.append($divName);
+			$div.attr("id", obj.id);
+			css = {
+				"left": data.x + left,
+				"top": data.y + top,
+				"position":"absolute"
+				};
+			if(data.width != null){
+				css["width"] = data.width;
+			}
+			if(data.height != null){
+				css["height"] = data.height;
+			}
+			$div.css(css);
+			$('#canvas2').append($div);
+			if(obj.init != true){
+				$div.removeClass("desc");
+				$div.addClass("desc_opaque");
+				$div.animate({"background-color": "#33ffcc"});
+				$div.animate({"background-color": "transparent"},{
+				    duration:200,
+				    //easing:'easeInBack',
+				    complete:function(){
+				    	$(this).addClass('desc');
+				    	$(this).removeClass('desc_opaque');
+				    }
+				  });
+			}
+
+			$(".draggable")
+				.resizable(
+					{
+						stop: function(event, ui){
+							width = ui.size.width;
+							height = ui.size.height
+							var id = ui.helper.attr("id");
+							var sendData = {
+									boardId: boardId,
+									type: "resize",
+									id: id,
+									data:JSON.stringify({
+										width: width,
+										height: height
+										})
+									};
+							sendMessage(sendData);
+						}
+					})
+				.draggable({
+					start: function(event, ui) {
+						// console.log("Start dragging");
+					},
+					stop: function(event, ui) {
+						// console.log("Stop dragging");
+						var id = ui.helper.attr("id");
+						var x = ui.offset.left - left;
+						var y = ui.offset.top - top;
+						var sendData = {
+								boardId: boardId,
+								type: "move",
+								id: id,
+								data:JSON.stringify({
+									x: x,
+									y: y
+									})
+								};
+						sendMessage(sendData);
+					}
+				});
+		} else if(obj.type == "update"){
+			$div = $('#'+obj.id);
+			$divInner = $div.find('.descInner');
+			$divInner.html(data.html);
+			$div.find("span.update").text(data.update_name);
+			$divInner.data("raw", JSON.parse(data.raw));
+		} else if(obj.type == "move"){
+			$div = $('#'+obj.id);
+			$div.css({
+				"position":"absolute"
+			});
+			$div.animate({
+				"left": (left + data.x) + "px",
+				"top": (top + data.y) + "px"
+			});
+		} else if(obj.type == "resize"){
+			$div = $('#'+obj.id);
+			$div.css({
+				"position":"absolute"
+			});
+			$div.animate({
+				"width": data.width + "px",
+				"height": data.height + "px"
+			});
+		} else if(obj.type == "remove"){
+			var id = obj.id;
+			removeDesc(id);
+		} else {
+			console.error("Unexpected obj.type:[" + obj.type + "]");
+			console.error(obj);
+		}
+	}
+
+	function removeDesc(id){
+		$('#'+id).remove();
+	}
+
+	function showDialog(){
+		unselect();
+		editing = true;
+		$( "#dialog-confirm" ).dialog({
+			resizable: false,
+			height: "auto",
+			width: 400,
+			modal: true,
+			dialogClass: 'editDialog',
+			open: function(event, ui){
+				$('.ui-dialog-titlebar').removeClass('ui-widget-header');
+				$('button').removeClass('ui-button ui-corner-all ui-widget');
+				$(".ql-editor").focus();
+		    },
+			buttons: [
+				{
+					text: DIALOG_SAVE,
+					class:'btn btn-sm btn-info',
+					click: function() {
+						$( this ).dialog( "close" );
+						// console.log("editorSave");
+						var html = quill.root.innerHTML;
+						var raw = quill.getContents();
+						// TODO: Should quit the process if the content is vacant?
+						// console.log(html);
+						var x = $("#editorData").data("x");
+						var y = $("#editorData").data("y");
+						var editId = $("#editorData").data("editId");
+						var type;
+						if(editId == null){
+							type = "create";
+						} else {
+							type = "update";
+							// Updates p.update
+							$('#'+editId).find('span.update').text(userName);
+						}
+						var sendData = {
+								boardId: boardId,
+								type: type,
+								id: editId,
+								data:JSON.stringify({
+									x: x,
+									y: y,
+									raw: JSON.stringify(raw),
+									html: html})
+								};
+						sendMessage(sendData);
+						quill.setContents([]);
+						$("#editorData").data("editId", null);
+						editing = false;
+					}
+				},
+				{
+					text: DIALOG_CANCEL,
+					class:'btn btn-sm btn-secondary',
+					click: function() {
+						$( this ).dialog( "close" );
+						quill.setContents([]);
+						$("#editorData").data("editId", null);
+						editing = false;
+	                }
+				}
+			]
+		})
+	}
+
+	function edit($this){
+		$inner = $this.find('.descInner');
+		var raw = $inner.data("raw");
+		var id = $this.attr("id");
+		$("#editorData").data("editId", id);
+		quill.setContents(raw);
+		showDialog();
+	}
+
+	function copy($this){
+		$inner = $this.find('.descInner');
+		var raw = $inner.data("raw");
+		var html = $inner.html();
+		var top = $('#canvas').offset().top;
+		var left = $('#canvas').offset().left;
+		var x = $this.offset().left - left;
+		var y = $this.offset().top - top;
+		var width = $this.css('width');
+		if(width != null){
+			width = width.replace(/px/g, "");
+		}
+		var height = $this.css('height');
+		if(height != null){
+			height = height.replace(/px/g, "");
+		}
+		var sendData = {
+				boardId: boardId,
+				type: "create",
+				data:JSON.stringify({
+					x: x + 20,
+					y: y + 20,
+					width: width,
+					height: height,
+					raw: JSON.stringify(raw),
+					html: html})
+				};
+		sendMessage(sendData);
+	}
+
+	// Connection check timer
+	var connectionCheckTimer = null;
+
+	// Connection notification timer
+	var sendBeaconTimer = null;
+
+	function checkConnection(){
+		console.log("Connection check")
+		if(connectionCheckTimer != null){
+			clearInterval(connectionCheckTimer);
+			checkConnectionInner();
+		}
+		connectionCheckTimer = setInterval("checkConnection()", connectionCheckInterval * 1000);
+	}
+
+	function checkConnectionInner(){
+		var result;
+		if(stompClient.connected == false) {
+		 	result = window.confirm(MESSAGE_CONNECTION_LOST);
+		 	if(result){
+		 		location.reload();
+		 	}
+		 	return false;
+		}
+		return true;
+	}
+
+	function sendBeacon(){
+		console.log("Send a connection notification.")
+		if(sendBeaconTimer != null){
+			clearInterval(sendBeaconTimer);
+			sendRegistration(regOpen);
+		}
+		sendBeaconTimer = setInterval("sendBeacon()", sendBeaconInterval * 1000);
+	}
+
+	function isTouchScreen(){
+		if(window.ontouchstart === null){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function updateUserInfo(){
+		var show = $("#showUserInfo").prop('checked');
+		if(show == true){
+			$('.descInfo').show();
+		} else {
+			$('.descInfo').hide();
+		}
+	}
+
+	var regOpen = {
+			type: "open",
+			userId: userId,
+			userName: userName,
+			boardId: boardId
+		};
+
+	var regClose = {
+			type: "close",
+			userId: userId,
+			userName: userName,
+			boardId: boardId
+		};
+
+	$(function() {
+
+		connect(regOpen);
+
+		$(window).on('beforeunload', function() {
+			disconnect(regClose);
+		});
+
+		$('body').on('keydown', function(e){
+
+			if(editing){
+				return;
+			}
+			// Delete Key
+			if(e.keyCode == 46) {
+		        if(selectedDescs != null){
+		        	var id = selectedDescs;
+		        	_.each(selectedDescs, function(id){
+		        		// TODO: Want to delete several descriptions at a time
+				        var sendData = {boardId: boardId, type: "remove", id: id, data:JSON.stringify({})};
+						sendMessage(sendData);
+		        	});
+				}
+		    }
+			//if(!editing){
+				e.preventDefault();
+			//}
+		});
+
+		// Change the language without confirmation.
+		setUpLocaleChangeWithConfirmation(false);
+
+		$('#canvas2').on('click', ".desc", select);
+		$('#canvas').on('click', unselect);
+
+		if(isTouchScreen()){
+			$('#canvas').on('dblTap', onDblClick);
+		} else {
+			$('#canvas').on('dblclick', onDblClick);
+		}
+
+		// 修正
+		$("#canvas2").on("dblclick dblTap", ".desc", function(e){
+			var $this = $(this);
+			edit($this);
+		});
+
+		// 初期状態はユーザー情報非表示とする。
+		$("#showUserInfo").on('change', function(){
+			updateUserInfo();
+		});
+
+		var Delta = Quill.import('delta');
+		quill = new Quill('#editor', {
+		  theme: 'snow',
+		  modules: {
+		    syntax : true,              // Include syntax module
+		    // https://quilljs.com/docs/modules/toolbar/
+		    toolbar : [
+		      ['bold', 'italic', 'underline', 'strike'],
+		      [{ 'color': [] }, { 'background': [] }],
+		      //['link', 'image'] ,
+		      [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+		      [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+		      //['code-block']
+		    ]
+		  }
+		});
+		init(descs);
+
+
+		$("body").contextmenu({
+			delegate: ".hasmenu",
+			taphold: isTouchScreen(), // false if accessed from non-touchscreen devices
+			menu: [],
+			beforeOpen: function(event, ui) {
+				var $menu = ui.menu;
+				var $target = ui.target;
+				var extraData = ui.extraData;
+
+		        var $hasmenu = $target.closest('.hasmenu');
+				var createMenu = [{title: MENU_CREATE, cmd: "create", uiIcon: "ui-icon-copy"}];
+				var deleteMenu = [
+					{title: MENU_EDIT, cmd: "edit", uiIcon: "ui-icon-pencil"},
+					{title: MENU_COPY, cmd: "copy", uiIcon: "ui-icon-copy"},
+					{title: MENU_REMOVE, cmd: "remove", uiIcon: "ui-icon-close"}
+				];
+				if($hasmenu.hasClass('desc')){
+					menu = deleteMenu;
+				} else {
+					menu = createMenu;
+				}
+				$("body").contextmenu({
+					delegate: ".hasmenu",
+					autoFocus: true,
+					taphold: true,
+					menu: menu
+				});
+			},
+			select: function(event, ui) {
+				if(!checkConnectionInner()){
+					return;
+				};
+				var cmd = ui.cmd;
+				if(cmd == "create"){
+					var $menu = $('ul.ui-menu');
+					var top = $('#canvas').offset().top;
+					var left = $('#canvas').offset().left;
+					var x = $menu.offset().left - left;
+					var y = $menu.offset().top - top;
+					showDialog();
+					$('#editorData').data({x: x, y: y});
+				}
+				var $target = ui.target;
+				var $hasmenu = $target.closest('.hasmenu');
+				if(cmd == "remove"){
+					var id = $hasmenu.attr('id');
+					var sendData = {boardId: boardId, type: "remove", id: id, data:JSON.stringify({})};
+					sendMessage(sendData);
+				}
+				if(cmd == "edit"){
+					edit($hasmenu);
+				}
+				if(cmd == "copy"){
+					copy($hasmenu);
+				}
+			}
+		});
+
+		// Start a connection check timer.
+		checkConnection();
+
+		// Strat a connection notification timer.
+		sendBeacon();
+
+		$('#userListInner').hide();
+
+		$('#userList').on('click', '#userListNumArea', function(){
+			$('#userListInner').show();
+			$('#userListNumArea').hide();
+		});
+		$('#userList').on('click', '#userListInner', function(){
+			$('#userListInner').hide();
+			$('#userListNumArea').show();
+		});
+
+		// Must call this procedure at the end,
+		// i.e, after rendering all the description.
+		updateUserInfo();
+	});
+
+</script>
+  </head>
+  <body>
+  <div id="nav" th:replace="~{components/nav}"></div>
+  <div id="dialog-confirm" th:title="#{message.board.dialog.title}" style="display:none">
+		<div id="editor" style="width:100%;height:100%"></div>
+		<div id="editorData" style="display:none"></div>
+      </div>
+	<br>
+	<div class="titleRow">
+		<div class="board-title" style="display:inline-block" th:text="${boardName}"></div>
+		<div id="showUserInfoArea" style="display:inline-block">
+		<input id="showUserInfo" type="checkbox"/> <label for="showUserInfo">情報表示</label>
+		</div>
+	</div>
+	<div id="userList" >
+		<div id="userListNumArea">
+			<img class="amb-4" th:src="@{/images/person-fill.svg}" alt="" width="24" height="24">
+			<span id="userListNum"></span>
+		</div>
+		<div id="userListInner">
+		</div>
+	</div>
+
+	<canvas id="canvas" class="hasmenu" width="1000" height="500"></canvas>
+    <div id="canvas2" class="hasmenu"></div>
+
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title th:text="#{page.main.title}"></title>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script th:src="@{/js/jquery-3.5.0.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+</head>
+<body>
+<div id="nav" th:replace="~{components/nav}"></div>
+	<div class="container">
+	<br>
+	<form>
+		<div class="form-group">
+			<label for="team" th:text="#{message.main.select}"></label>
+			<select id="team" name="team" class="form-control  col-lg-8">
+				<option th:each="t : ${teams}" th:value="${t.id}" th:selected="${#strings.toString(t.id) == selectedTeam}" th:inline="text">[[${t.name}]]</option>
+			</select>
+		</div>
+<table id="board_list" class="table table-hover col-lg-12">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th th:if="${debug}" scope="col" th:text="#{common.board_id}"></th>
+      <th th:if="${debug}" scope="col" th:text="#{common.team_id}"></th>
+      <th scope="col" th:text="#{common.board}"></th>
+      <th scope="col" th:text="#{common.description}"></th>
+      <th scope="col" th:text="#{common.operation}"></th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr th:each="data, iterStat : ${boards}" th:object="${data}" scope="row" th:attr="class='teamid_' + *{teamId}">
+      <td th:text="${iterStat.count}" class="col_num"></td>
+      <td th:if="${debug}" th:text="*{id}"></td>
+      <td th:if="${debug}" th:text="*{teamId}"></td>
+      <td th:text="*{name}"></td>
+      <td th:text="*{description}"></td>
+      <td>
+        <button type="button" class="btn btn-primary btn-sm"
+         th:attr="onclick='openBoard('+ *{id} + ')'" th:text="#{common.open}"></button>
+      <button type="button" class="btn btn-primary btn-sm"
+      th:attr="onclick='downloadHTML('+ *{id} + ')'" th:text="#{common.exportHTML}"></button>
+     <button type="button" class="btn btn-primary btn-sm"
+      th:attr="onclick='downloadCSV('+ *{id} + ')'" th:text="#{common.exportCSV}"></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+	</form>
+	</div>
+</body>
+
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+
+<script th:inline="javascript">/*<![CDATA[*/
+var selectedTeam = "[(${selectedTeam})]";
+/*]]>*/</script>
+
+<script>
+function showBoards(teamId){
+	$('#board_list tbody tr').hide();
+	$('.teamid_'+teamId).show();
+	var $trs = $('td.col_num:visible');
+	var count = 1;
+	$trs.each(function(index, element){
+		$(element).text(count++);
+	});
+}
+
+$(function(){
+
+	var teamId = $('#team').val();
+	showBoards(teamId);
+
+	$('#team').on('change', function(){
+		var teamId = $(this).val();
+		selectedTeam = teamId;
+		showBoards(teamId);
+	});
+
+	// Change the language without confirmation.
+	setUpLocaleChangeWithConfirmation(false);
+
+})
+
+</script>
+</html>

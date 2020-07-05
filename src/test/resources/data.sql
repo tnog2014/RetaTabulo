@@ -1,0 +1,9 @@
+--INSERT INTO login_user (user_name, password, nickname, valid, level) VALUES
+--(
+    --'admin',
+    --'password'
+    --'$2a$10$2a6LgH1pZj3s0ZMAqJafW.Cd8mceQgBK.nR8FHA6yK8tM09SBJjUm',
+    --'管理者',
+    --'1',
+    --'1'
+--);

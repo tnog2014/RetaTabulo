@@ -1,0 +1,98 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<style>
+#canvas {
+	border: solid 1px black;
+	margin: 10px;
+}
+
+#canvas2 {
+
+}
+
+.desc {
+	padding: 5px;
+	/* font-family: HuiFontP109;*/
+}
+
+#canvas2 .ui-widget-content {
+	border: none;
+	background-color: transparent;
+}
+
+.desc p {
+	margin: 0;
+	padding: 0
+}
+
+.board-title {
+	font-size: 20pt;
+	margin-left: 20px
+}
+</style>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var descs = /*[(${descs})]*/[];
+	/*]]>*/
+</script>
+
+</head>
+<body>
+	<div class="titleRow">
+		<div class="board-title" style="display:inline-block" th:text="${boardName}"></div>
+	</div>
+	<canvas id="canvas" width="1000" height="500"></canvas>
+	<div id="canvas2" th:utext="${canvas}"></div>
+</body>
+<script>
+	var desc, div, canvas, rect, offsetX, offsetY, style;
+	for (i = 0; i < descs.length; i++) {
+		desc = descs[i];
+		div = document.createElement('div');
+		canvas = document.getElementById("canvas");
+		rect = canvas.getBoundingClientRect();
+		div.className = 'desc';
+		div.id = desc["id"];
+		offsetY = rect.top;
+		offsetX = rect.left;
+		div.innerHTML = desc["html"];
+		y = desc["y"] + offsetY;
+		x = desc["x"] + offsetX;
+		width = "";
+		if(desc["width"] != null){
+			width = "width:" + desc["width"]+"px;";
+		}
+		height = "";
+		if(desc["height"] != null){
+			height = "height:" + desc["height"]+"px;";
+		}
+		style = 'top:' + y + 'px; left:' + x + 'px; position:absolute;' + width + height;
+		div.style.cssText = style;
+		document.getElementById('canvas2').appendChild(div);
+	}
+</script>
+</html>

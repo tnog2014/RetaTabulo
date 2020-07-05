@@ -1,0 +1,92 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title th:text="#{page.error.title}"></title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm navbar-dark mynav">
+		<a class="navbar-brand" href="#">RetaTabulo</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarToggler01" aria-controls="navbarToggler01"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<!--/*
+		<div class="navbar-text  justify-content-start">
+			<span style="margin-right:30px" th:text="|[${userId} ${userName}]|" ></span>
+		</div> */-->
+		<div class="collapse navbar-collapse justify-content-end"
+			id="navbarToggler01">
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item">
+			</ul>
+			<select id="locales"
+				class="form-control form-control-sm col-sm-3 col-md-2"
+				style="margin-right: 5px;">
+				<option value="eo" th:selected="*{lang == 'eo'}" th:text="#{lang.eo}"></option>
+				<option value="ja" th:selected="*{lang == 'ja'}" th:text="#{lang.ja}"></option>
+				<option value="en" th:selected="*{lang == 'en'}" th:text="#{lang.en}"></option>
+			</select>
+		</div>
+	</nav>
+
+	<div class="container">
+		<br>
+		<th:block th:if="${errorMessage != null}">
+			<h2 th:text="${errorMessage}"></h2>
+		</th:block>
+		<th:block th:if="${errorMessage == null}">
+			<h2>404 Not Found</h2>
+		</th:block>
+		<th:block th:if="${debugMessage != null}">
+			<div th:text="${debugMessage}"></div>
+		</th:block>
+		<div th:text="${timestamp}"></div>
+		<br>
+		<p>
+			<a th:href="@{/main}">Back to the main page</a>
+		</p>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script th:src="@{/js/jquery-3.5.0.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/common.js}"></script>
+		<script>
+			$(function() {
+
+				// Change the language without confirmation.
+				setUpLocaleChangeWithConfirmation(false);
+
+			})
+		</script>
+	</div>
+</body>
+</html>

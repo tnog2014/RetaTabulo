@@ -1,0 +1,125 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title th:text="#{page.login.title}"></title>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+
+<style>
+.bd-placeholder-img {
+	font-size: 1.125rem;
+	text-anchor: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@media ( min-width : 768px) {
+	.bd-placeholder-img-lg {
+		font-size: 3.5rem;
+	}
+}
+</style>
+<!-- Custom styles for this template -->
+<link th:href="@{/css/signin.css}" rel="stylesheet">
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm navbar-dark mynav">
+		<a class="navbar-brand" href="#">RetaTabulo</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler01" aria-controls="navbarToggler01" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarToggler01">
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+			</ul>
+			<select id="locales" class="form-control form-control-sm col-sm-3 col-md-2" style="margin-right:5px;">
+				<option id="opt_eo" value="eo" th:selected="*{lang == 'eo'}" th:text="#{lang.eo}"></option>
+				<option id="opt_ja" value="ja" th:selected="*{lang == 'ja'}" th:text="#{lang.ja}"></option>
+				<option id="opt_en" value="en" th:selected="*{lang == 'en'}" th:text="#{lang.en}"></option>
+			</select>
+		</div>
+	</nav>
+	<div class="alert alert-success" role="alert" th:if="${param.logout}" th:text="#{message.login.logged_out}">
+	</div>
+	<div class="alert alert-danger" role="alert" th:if="${param.error}" th:text="#{message.login.error}">
+	</div>
+	<div class="container">
+	<!-- <form class="form-signin" th:action="@{/sign_in}" method="post"> -->
+	<form id="main_form" class="form-signin text-center" th:action="@{/main?lang=eo}" method="post">
+		<img class="amb-4" th:src="@{/images/person-fill.svg}" alt="" width="128" height="128">
+		<h3 id="login_message" class="h4 mb-3 font-weight-normal" th:text="#{message.login.please}"></h3>
+		<label for="username" class="sr-only" th:text="#{common.user}"></label>
+		<input type="text" id="username" name="username" class="form-control" th:attr="placeholder='' + #{common.user}" placeholder="User" required autofocus>
+		<label for="password" class="sr-only" th:text="#{common.password}"></label>
+		<input type="password" id="password" name="password" class="form-control" th:attr="placeholder='' + #{common.password}" required>
+		<!--/*<div class="checkbox mb-3">
+			<label> <input type="checkbox" value="remember-me">
+				Remember me
+			</label>
+		</div>*/-->
+		<button id="login" class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{common.login}"></button>
+	</form>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+
+
+<script th:inline="javascript">/*<![CDATA[*/
+var localeData = /*[(${localeData})]*/ {};
+var contextPath = "[(@{/})]";
+/*]]>*/</script>
+
+<script>
+
+$(function(){
+
+	$("#locales").change(function () {
+		var selectedOption = $('#locales').val();
+		if (selectedOption != ''){
+
+			var array = localeData[selectedOption];
+			$('#main_form').attr('action', contextPath + 'main?lang='+selectedOption);
+			$('#login_message').text(array[0]);
+			$('#username').attr('placeholder', array[1]);
+			$('#password').attr('placeholder', array[2]);
+			$('#login').text(array[3]);
+			$('#opt_eo').text(array[4]);
+			$('#opt_ja').text(array[5]);
+			$('#opt_en').text(array[6]);
+		}
+	});
+
+});
+</script>
+</html>

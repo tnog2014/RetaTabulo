@@ -1,0 +1,92 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title th:text="#{page.board_list.title}"></title>
+</head>
+<body>
+<div id="nav" th:replace="~{components/nav}"></div>
+<div class="container">
+	<form>
+	<button type="button" style="margin:5px" class="btn btn-info btn-sm" onclick="openBoardCreate()" th:text="#{common.newly_create}"></button><br>
+<table class="table table-hover col-lg-12">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th th:if="${debug}" scope="col" th:text="#{common.board_id}"></th>
+      <th scope="col" th:text="#{common.team}"></th>
+      <th scope="col" th:text="#{common.board}"></th>
+      <th scope="col" th:text="#{common.description}"></th>
+      <th scope="col" th:text="#{common.operation}"></th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr th:each="data, iterStat : ${boards}" th:object="${data}" scope="row">
+      <td th:text="${iterStat.count}"></td>
+      <td th:if="${debug}" th:text="*{id}"></td>
+      <td th:text="*{teamName}"></td>
+      <td th:text="*{name}"></td>
+      <td th:text="*{description}"></td>
+      <td>
+		<button type="button" class="btn btn-open btn-sm" th:attr="onclick='openBoardInfo(' + *{id} + ')'" th:text="#{common.open}"></button>
+		<button type="button" class="btn btn-info btn-sm" th:attr="onclick='openBoardEdit(' + *{id} + ')'" th:text="#{common.edit}"></button>
+		<button type="button" class="btn btn-delete btn-sm" th:attr="onclick='confirmRemove(' + *{id} + ')'" th:text="#{common.delete}"></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>
+<script th:src="@{/js/jquery-3.5.0.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+
+<script th:inline="javascript">/*<![CDATA[*/
+var MESSAGE_CONFIRM_REMOVE = "[(#{message.board_list.confirm_remove})]";
+/*]]>*/</script>
+
+<script>
+
+function confirmRemove(id){
+	var result = confirm(MESSAGE_CONFIRM_REMOVE);
+	if(result == 1){
+		deleteBoard(id);
+	}
+}
+
+$(function(){
+
+	// Change the language without confirmation.
+	setUpLocaleChangeWithConfirmation(false);
+
+})
+
+</script>
+</body>
+</html>

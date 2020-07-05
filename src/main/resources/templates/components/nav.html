@@ -1,0 +1,57 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+ 	<nav class="navbar navbar-expand-sm navbar-dark mynav">
+		<a class="navbar-brand" href="#">RetaTabulo</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler01" aria-controls="navbarToggler01" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarToggler01">
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/main}" th:text="#{common.main}"></a>
+				</li>
+				<th:block th:if="${admin==true || teamAdmin==true}">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/board}" th:text="#{page.menu.board}"></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/user}" th:text="#{page.menu.user}"></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/team}" th:text="#{page.menu.team}"></a>
+					</li>
+				</th:block>
+				<li class="nav-item">
+					<a class="nav-link" th:attr="onclick='openUserEdit(' + ${commonForm.loginUserId} + ')'" th:text="|[${commonForm.loginUserName}]|"></a>
+				</li>
+			</ul>
+			<select id="locales" class="form-control form-control-sm col-sm-3 col-md-2" style="margin-right:5px;">
+				<option value="eo" th:selected="*{lang == 'eo'}" th:text="#{lang.eo}"></option>
+				<option value="ja" th:selected="*{lang == 'ja'}" th:text="#{lang.ja}"></option>
+				<option value="en" th:selected="*{lang == 'en'}" th:text="#{lang.en}"></option>
+			</select>
+			<form class="form-inline my-2 my-lg-0" method="post" th:action="@{/logout}">
+				<button class="btn btn-sm btn-light my-2 my-sm-0" type="submit" th:text="#{common.logout}"></button>
+			</form>
+		</div>
+	</nav>
+	<script th:inline="javascript">/*<![CDATA[*/
+var contextPath = "[(@{/})]";
+/*]]>*/</script>

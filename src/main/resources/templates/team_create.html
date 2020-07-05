@@ -1,0 +1,70 @@
+<!--/*
+ * Copyright(c) 2020 tnog2014. All rights reserved.
+ *
+ * This file is part of RetaTabulo.
+ *
+ * RetaTabulo is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RetaTabulo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RetaTabulo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title th:text="#{page.board_create.title}"></title>
+
+</head>
+<body>
+<div id="nav" th:replace="~{components/nav}"></div>
+<br>
+<div class="container">
+<div class="alert alert-warning" role="alert" th:if="${message}" th:text="${message}"></div>
+	<form method="post" th:action="@{/team/create}" th:object="${teamForm}">
+		<div class="form-group">
+			<label for="name" th:text="#{common.team}"></label>
+			<input type="text" class="form-control" id="name" th:field="${teamForm.name}" th:errorclass="fieldError">
+			<span id="err_name" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></span>
+		</div>
+		<div class="form-group">
+			<label for="description" th:text="#{common.description}"></label>
+			<textarea class="form-control" id="description" rows="3" th:field="${teamForm.description}" th:errorclass="fieldError"></textarea>
+			<span id="err_description" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color: red"></span>
+		</div>
+		<button type="submit" class="btn btn-info" th:text="#{common.create}"></button>
+		<button type="button" class="btn btn-secondary" onclick="openTeamList()" th:text="#{common.cancel}"></button>
+	</form>
+	</div>
+	<script th:src="@{/js/jquery-3.5.0.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/underscore-min.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script>
+		var items = ["name", "description"];
+
+		$(function(){
+
+			// Change the language with confirmation.
+			setUpLocaleChangeWithConfirmation(true);
+
+			processValidation(items);
+		})
+	</script>
+</body>
+</html>

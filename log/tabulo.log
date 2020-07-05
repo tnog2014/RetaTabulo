@@ -1,0 +1,84 @@
+2020-07-05 15:33:35.535  INFO 19652 --- [restartedMain] tabulo.RetaTabuloApplication             : Starting RetaTabuloApplication on DYN-P2G5JB with PID 19652 (C:\Users\tnog\git\RetaTabulo\target\classes started by tnog in C:\Users\tnog\git\RetaTabulo)
+2020-07-05 15:33:35.537 DEBUG 19652 --- [restartedMain] tabulo.RetaTabuloApplication             : Running with Spring Boot v2.1.14.BUILD-SNAPSHOT, Spring v5.1.15.RELEASE
+2020-07-05 15:33:35.538  INFO 19652 --- [restartedMain] tabulo.RetaTabuloApplication             : No active profile set, falling back to default profiles: default
+2020-07-05 15:33:35.572  INFO 19652 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2020-07-05 15:33:35.573  INFO 19652 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2020-07-05 15:33:36.353  INFO 19652 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2020-07-05 15:33:36.464  INFO 19652 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 104ms. Found 6 JPA repository interfaces.
+2020-07-05 15:33:37.161  INFO 19652 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2020-07-05 15:33:37.182  INFO 19652 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-07-05 15:33:37.183  INFO 19652 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.34]
+2020-07-05 15:33:37.289  INFO 19652 --- [restartedMain] o.a.c.c.C.[.[localhost].[/rt/app]        : Initializing Spring embedded WebApplicationContext
+2020-07-05 15:33:37.438  INFO 19652 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-07-05 15:33:37.606  INFO 19652 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-07-05 15:33:37.654  INFO 19652 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2020-07-05 15:33:37.706  INFO 19652 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.17.Final}
+2020-07-05 15:33:37.707  INFO 19652 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000205: Loaded properties from resource hibernate.properties: {hibernate.bytecode.use_reflection_optimizer=false, hibernate.jdbc.lob.non_contextual_creation=true}
+2020-07-05 15:33:37.829  INFO 19652 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2020-07-05 15:33:38.007  INFO 19652 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL95Dialect
+2020-07-05 15:33:38.085  INFO 19652 --- [restartedMain] o.h.e.j.e.i.LobCreatorBuilderImpl        : HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2020-07-05 15:33:38.090  INFO 19652 --- [restartedMain] org.hibernate.type.BasicTypeRegistry     : HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@cdeddf7
+2020-07-05 15:33:38.709  INFO 19652 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-07-05 15:33:39.418  INFO 19652 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientInboundChannelExecutor'
+2020-07-05 15:33:39.422  INFO 19652 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'clientOutboundChannelExecutor'
+2020-07-05 15:33:39.539  INFO 19652 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/images/**'], []
+2020-07-05 15:33:39.539  INFO 19652 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/css/**'], []
+2020-07-05 15:33:39.539  INFO 19652 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: Ant [pattern='/js/**'], []
+2020-07-05 15:33:39.565  INFO 19652 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@69999184, org.springframework.security.web.context.SecurityContextPersistenceFilter@36833f76, org.springframework.security.web.header.HeaderWriterFilter@6f35cd45, org.springframework.security.web.csrf.CsrfFilter@8693aa, org.springframework.security.web.authentication.logout.LogoutFilter@5a3176ad, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@72938274, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5689e126, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@385b5a07, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7f73ee1, org.springframework.security.web.session.SessionManagementFilter@78ca6065, org.springframework.security.web.access.ExceptionTranslationFilter@1ba95fc6, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@761e7ef4]
+2020-07-05 15:33:39.576  INFO 19652 --- [restartedMain] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'messageBrokerTaskScheduler'
+2020-07-05 15:33:39.580  INFO 19652 --- [restartedMain] tabulo.WebSocketConfig                   : allowedOrigins:[*]
+2020-07-05 15:33:39.603  INFO 19652 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'brokerChannelExecutor'
+2020-07-05 15:33:39.739  WARN 19652 --- [restartedMain] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-07-05 15:33:39.968  INFO 19652 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2020-07-05 15:33:39.993  INFO 19652 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2020-07-05 15:33:39.993  INFO 19652 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2020-07-05 15:33:39.994  INFO 19652 --- [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2020-07-05 15:33:40.031  INFO 19652 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path '/rt/app'
+2020-07-05 15:33:40.035  INFO 19652 --- [restartedMain] tabulo.RetaTabuloApplication             : Started RetaTabuloApplication in 4.82 seconds (JVM running for 5.606)
+2020-07-05 15:33:40.070  INFO 19652 --- [restartedMain] o.h.h.i.QueryTranslatorFactoryInitiator  : HHH000397: Using ASTQueryTranslatorFactory
+2020-07-05 15:33:40.339  INFO 19652 --- [restartedMain] tabulo.RetaTabuloApplication             : Do not create any admin user.
+2020-07-05 15:33:53.224  INFO 19652 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/rt/app]        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-07-05 15:33:53.322 DEBUG 19652 --- [http-nio-8080-exec-1] tabulo.controller.LoginController        : showLoginForm start
+2020-07-05 15:33:53.323 DEBUG 19652 --- [http-nio-8080-exec-1] tabulo.controller.LoginController        : getLocaleData start
+2020-07-05 15:33:53.326 DEBUG 19652 --- [http-nio-8080-exec-1] tabulo.controller.LoginController        : getLocaleData end: {'eo':['Bonvolu ensaluti!','Uzanto','Pasvorto','Ensaluto','Esperanto','japana','angla'],'ja':['ログインしてください','ユーザー','パスワード','ログイン','エスペラント','日本語','英語'],'en':['Please login','User','Password','Login','Esperanto','Japanese','English']}
+2020-07-05 15:33:53.326 DEBUG 19652 --- [http-nio-8080-exec-1] tabulo.controller.LoginController        : showLoginForm end
+2020-07-05 15:33:53.669 DEBUG 19652 --- [http-nio-8080-exec-2] tabulo.controller.LoginController        : showLoginForm start
+2020-07-05 15:33:53.669 DEBUG 19652 --- [http-nio-8080-exec-2] tabulo.controller.LoginController        : showLoginForm end
+2020-07-05 15:33:58.876 DEBUG 19652 --- [http-nio-8080-exec-4] tabulo.controller.BoardController        : processMain start
+2020-07-05 15:33:58.881 DEBUG 19652 --- [http-nio-8080-exec-4] tabulo.controller.BoardController        : processMain end
+2020-07-05 15:33:58.920 DEBUG 19652 --- [http-nio-8080-exec-9] tabulo.controller.BoardController        : openMainView start
+2020-07-05 15:33:58.950 DEBUG 19652 --- [http-nio-8080-exec-9] tabulo.controller.BoardController        : openMainView end
+2020-07-05 15:34:01.070 DEBUG 19652 --- [http-nio-8080-exec-8] tabulo.controller.BoardController        : openMainView start
+2020-07-05 15:34:01.077 DEBUG 19652 --- [http-nio-8080-exec-8] tabulo.controller.BoardController        : openMainView end
+2020-07-05 15:34:02.682 DEBUG 19652 --- [http-nio-8080-exec-10] tabulo.controller.BoardController        : openBoardView start:[6]
+2020-07-05 15:34:02.685 DEBUG 19652 --- [http-nio-8080-exec-10] tabulo.controller.AuthorizationUtil      : ボード権限チェック:[admin][6]
+2020-07-05 15:34:02.699 DEBUG 19652 --- [http-nio-8080-exec-10] tabulo.controller.AuthorizationUtil      : 全体管理権限あり -> true
+2020-07-05 15:34:02.718 DEBUG 19652 --- [http-nio-8080-exec-10] tabulo.controller.BoardController        : createDecsArray start:6
+2020-07-05 15:34:02.731 DEBUG 19652 --- [http-nio-8080-exec-10] tabulo.controller.BoardController        : createDecsArray end
+2020-07-05 15:34:02.731 DEBUG 19652 --- [http-nio-8080-exec-10] tabulo.controller.BoardController        : openBoardView end
+2020-07-05 15:34:03.379 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.BoardController        : userRegistration:boardId:[6],userId:[3],subId:[null],userName:[admin],type:[open]
+2020-07-05 15:34:03.380 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.BoardController        : The first 2 bytes of CRC32 hash value:D1EC]
+2020-07-05 15:34:03.380 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.AuthorizationUtil      : ボード権限チェック:[admin][6]
+2020-07-05 15:34:03.384 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.AuthorizationUtil      : 全体管理権限あり -> true
+2020-07-05 15:34:03.384 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.BoardController        : Remove the login users from the board :[400] seconds
+2020-07-05 15:34:03.395 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.BoardController        : A board user entered
+2020-07-05 15:34:03.420 DEBUG 19652 --- [clientInboundChannel-10] tabulo.controller.BoardController        : Publish the board state:[admin (D1EC)]
+2020-07-05 15:34:04.384 DEBUG 19652 --- [clientInboundChannel-13] tabulo.controller.BoardController        : processMessage start:move
+2020-07-05 15:34:04.384 DEBUG 19652 --- [clientInboundChannel-13] tabulo.controller.AuthorizationUtil      : ボード権限チェック:[admin][6]
+2020-07-05 15:34:04.386 DEBUG 19652 --- [clientInboundChannel-13] tabulo.controller.AuthorizationUtil      : 全体管理権限あり -> true
+2020-07-05 15:34:04.387 DEBUG 19652 --- [clientInboundChannel-13] tabulo.controller.BoardController        : processMove start:[14][{"x":301,"y":39}]
+2020-07-05 15:34:04.411 DEBUG 19652 --- [clientInboundChannel-13] tabulo.controller.BoardController        : processMove end:14
+2020-07-05 15:34:04.412 DEBUG 19652 --- [clientInboundChannel-13] tabulo.controller.BoardController        : processMessage end:[14]
+2020-07-05 15:34:13.344  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2020-07-05 15:34:13.351  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2020-07-05 15:34:13.351  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+2020-07-05 15:34:13.351  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2020-07-05 15:34:13.353  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'brokerChannelExecutor'
+2020-07-05 15:34:13.354  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'messageBrokerTaskScheduler'
+2020-07-05 15:34:13.356  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'clientOutboundChannelExecutor'
+2020-07-05 15:34:13.356  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'clientInboundChannelExecutor'
+2020-07-05 15:34:13.358  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2020-07-05 15:34:13.361  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-07-05 15:34:13.364  INFO 19652 --- [RMI TCP Connection(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
