@@ -1,5 +1,19 @@
 # RetaTabulo
 
+- README en Esperanto estas en preparado.
+- README in English is in preparation.
+
+### Overview
+
+- RetaTabulo is a online white board application.
+- The application provides white boards, on which the users can write, remove and move phrases.
+- The content of a board is shared with all the users on the board.
+- The administrators can create, modify and remove boards and users.
+- Each user belongs to one or more teams. Users can use only boards belonging to their own teams.
+- Users can change the language by selecting a language in a pulldown in the header (Japanese, Esperanto and English are available). RetaTabulo means "net board" in Esperanto.
+
+> The internationalization is not yet complete. Some messages are not properly displayed in the selected language.
+
 ### 概要
 
 - RetaTabuloはオンラインホワイトボード共有アプリケーションです。
@@ -88,8 +102,6 @@
   現在のパスワード、新パスワード、新パスワード（確認）を入力します。
 
 3. 変更を確定する場合「更新」ボタンを押下します。変更を取り消す場合には「キャンセル」ボタンを押下します。
-
-（ここに一般ユーザーのユーザー情報変更画面のHCを置く）
 
 <img src="doc/manual/images/ユーザー編集（一般ユーザー）.png" width=75%>
 
