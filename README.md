@@ -622,12 +622,7 @@ WebSocket通信の送信元として許容するURL。*（すべて許容）以�
 
 ### テスト実行
 
+## ライセンス
 
-
-
-
-
-
-
-
+RetaTabuloはGPL (GNU public license) v2のもとで公開されています。
 
