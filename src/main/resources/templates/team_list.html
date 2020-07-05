@@ -34,7 +34,10 @@
 <div id="nav" th:replace="~{components/nav}"></div>
 <div class="container">
 	<form>
-	<button type="button" style="margin:5px" class="btn btn-info btn-sm" onclick="openTeamCreate()" th:text="#{common.newly_create}"></button><br>
+
+	<th:block th:if="${admin==true}">
+		<button type="button" style="margin:5px" class="btn btn-info btn-sm" onclick="openTeamCreate()" th:text="#{common.newly_create}"></button><br>
+	</th:block>
 <table class="table table-hover col-lg-12">
   <thead>
     <tr>
