@@ -79,7 +79,7 @@
 		div.id = desc["id"];
 		offsetY = rect.top;
 		offsetX = rect.left;
-		div.innerHTML = desc["html"];
+		div.innerHTML = JSON.parse(decodeURIComponent(desc["html"]));
 		y = desc["y"] + offsetY;
 		x = desc["x"] + offsetX;
 		width = "";

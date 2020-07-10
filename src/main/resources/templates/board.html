@@ -265,17 +265,14 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 				$div.attr("id", data.id);
 			}
 
-			$divInner.html(data.html);
+			$divInner.html(decodeJsonUri(data.html));
 
 			var raw = null;
-			if(data.raw!=null){
-				var tmp = data.raw;
-				tmp = tmp.replace(/\r\n/g, "\\n");
-				tmp = tmp.replace(/\n/g, "\\n");
-				raw = JSON.parse(tmp);
+			if(data.raw != null){
+				raw = decodeJsonUri(data.raw);
 			}
 
-			$divInner.data("raw", raw);
+			$divInner.data("raw", raw); // raw is Object
 			$div.addClass("desc draggable ui-widget-content hasmenu");
 			$div.append($divInner);
 			$div.append($divName);
@@ -350,9 +347,9 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 		} else if(obj.type == "update"){
 			$div = $('#'+obj.id);
 			$divInner = $div.find('.descInner');
-			$divInner.html(data.html);
+			$divInner.html(decodeJsonUri(data.html));
 			$div.find("span.update").text(data.update_name);
-			$divInner.data("raw", JSON.parse(data.raw));
+			$divInner.data("raw", decodeJsonUri(data.raw)); // raw is Object
 		} else if(obj.type == "move"){
 			$div = $('#'+obj.id);
 			$div.css({
@@ -427,8 +424,8 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 								data:JSON.stringify({
 									x: x,
 									y: y,
-									raw: JSON.stringify(raw),
-									html: html})
+									raw: encodeJsonUri(raw),
+									html: encodeJsonUri(html)})
 								};
 						sendMessage(sendData);
 						quill.setContents([]);
@@ -452,7 +449,7 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 
 	function edit($this){
 		$inner = $this.find('.descInner');
-		var raw = $inner.data("raw");
+		var raw = $inner.data("raw"); // Object
 		var id = $this.attr("id");
 		$("#editorData").data("editId", id);
 		quill.setContents(raw);
@@ -461,7 +458,7 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 
 	function copy($this){
 		$inner = $this.find('.descInner');
-		var raw = $inner.data("raw");
+		var raw = $inner.data("raw"); // raw is Object
 		var html = $inner.html();
 		var top = $('#canvas').offset().top;
 		var left = $('#canvas').offset().left;
@@ -483,8 +480,8 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 					y: y + 20,
 					width: width,
 					height: height,
-					raw: JSON.stringify(raw),
-					html: html})
+					raw: encodeJsonUri(raw),
+					html: encodeJsonUri(html)})
 				};
 		sendMessage(sendData);
 	}
@@ -540,6 +537,22 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 		} else {
 			$('.descInfo').hide();
 		}
+	}
+
+	function encodeJsonUri(input){
+		 console.log("encodeJsonUri start:"+input);
+		var wk = JSON.stringify(input);
+		wk = encodeURIComponent(wk);
+		 console.log("encodeJsonUri end:"+wk);
+		return wk;
+	}
+
+	function decodeJsonUri(input){
+		 console.log("decodeJsonUri start:"+input);
+		var wk = decodeURIComponent(input);
+		wk = JSON.parse(wk);
+		 console.log("decodeJsonUri end:"+wk);
+		return wk;
 	}
 
 	var regOpen = {
@@ -719,7 +732,7 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 	<div class="titleRow">
 		<div class="board-title" style="display:inline-block" th:text="${boardName}"></div>
 		<div id="showUserInfoArea" style="display:inline-block">
-		<input id="showUserInfo" type="checkbox"/> <label for="showUserInfo">情報表示</label>
+		<input id="showUserInfo" type="checkbox" style="margin-left:20px"/> <label for="showUserInfo" th:text="#{common.displayInfo}"></label>
 		</div>
 	</div>
 	<div id="userList" >
@@ -731,7 +744,7 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 		</div>
 	</div>
 
-	<canvas id="canvas" class="hasmenu" width="1000" height="500"></canvas>
+	<canvas id="canvas" class="hasmenu" width="1000" height="1400"></canvas>
     <div id="canvas2" class="hasmenu"></div>
 
   </body>

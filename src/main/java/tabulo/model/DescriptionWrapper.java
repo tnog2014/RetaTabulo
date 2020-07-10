@@ -19,6 +19,8 @@
  */
 package tabulo.model;
 
+import tabulo.constant.CommonConst;
+
 public class DescriptionWrapper {
 
 	private Integer id;
@@ -142,6 +144,14 @@ public class DescriptionWrapper {
 	}
 
 	public String toJSON() {
+		return toJSON(true);
+	}
+
+	public String toJSONForHTML() {
+		return toJSON(false);
+	}
+
+	public String toJSON(boolean withRaw) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("{");
 		sb.append("id:").append(getId()).append(", ");
@@ -153,19 +163,50 @@ public class DescriptionWrapper {
 		sb.append("y:").append(getY()).append(", ");
 		sb.append("width:").append(getWidth()).append(", ");
 		sb.append("height:").append(getHeight()).append(", ");
-		String raw = getRaw();
-		if (raw != null) {
-			raw = raw.replaceAll("[\r\n]", "");
+		if (withRaw) {
+			String raw = escape(getRaw());
+			sb.append("raw:'").append(raw).append("', ");
 		}
-		sb.append("raw:'").append(raw).append("', ");
-		sb.append("html:'").append(getHtml()).append("'");
+		String html = escape(getHtml());
+		sb.append("html:'").append(html).append("'");
 		sb.append("}");
 		return sb.toString();
 	}
 
+	public String toTSV() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getBoardId()).append(CommonConst.TAB);
+		sb.append(getId()).append(CommonConst.TAB);
+		sb.append(nullToVacant(getCreate_name())).append(CommonConst.TAB);
+		sb.append(nullToVacant(getUpdate_name())).append(CommonConst.TAB);
+		sb.append(getX()).append(CommonConst.TAB);
+		sb.append(getY()).append(CommonConst.TAB);
+		sb.append(nullToVacant(getWidth())).append(CommonConst.TAB);
+		sb.append(nullToVacant(getHeight())).append(CommonConst.TAB);
+		sb.append(escape(getRaw())).append(CommonConst.TAB);
+		sb.append(escape(getHtml())).append(CommonConst.CRLF);
+		return sb.toString();
+	}
+
+	private String nullToVacant(Object obj) {
+		if (obj != null) {
+			return obj.toString();
+		} else {
+			return "";
+		}
+	}
+
+	public static String escape(String input) {
+		String ret = input;
+		if (ret != null) {
+			ret = ret.replaceAll("'", "\\\\'");
+		}
+		return ret;
+	}
+
 	private String quote(String value) {
-		if(value != null) {
-			value = "'"+ value + "'";
+		if (value != null) {
+			value = "'" + value + "'";
 		} else {
 			value = "null";
 		}

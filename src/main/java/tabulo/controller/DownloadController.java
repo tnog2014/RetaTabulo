@@ -96,42 +96,9 @@ public class DownloadController {
 		List<DescriptionWrapper> descs = descService.createDescriptionWrappers(id);
 		StringBuffer sb = new StringBuffer();
 		for (DescriptionWrapper desc : descs) {
-			sb.append(desc.getBoardId()).append(CommonConst.TAB);
-			sb.append(desc.getId()).append(CommonConst.TAB);
-			sb.append(nullToVacant(desc.getCreate_name())).append(CommonConst.TAB);
-			sb.append(nullToVacant(desc.getUpdate_name())).append(CommonConst.TAB);
-			sb.append(desc.getX()).append(CommonConst.TAB);
-			sb.append(desc.getY()).append(CommonConst.TAB);
-			sb.append(nullToVacant(desc.getWidth())).append(CommonConst.TAB);
-			sb.append(nullToVacant(desc.getHeight())).append(CommonConst.TAB);
-			sb.append(desc.getRaw()).append(CommonConst.TAB);
-			sb.append(desc.getHtml()).append(CommonConst.CRLF);
+			sb.append(desc.toTSV());
 		}
 		return sb.toString();
-	}
-
-	private String nullToVacant(Object obj) {
-		if (obj != null) {
-			return obj.toString();
-		} else {
-			return "";
-		}
-	}
-
-	private String toString(Object obj) {
-		if (obj != null) {
-			return obj.toString();
-		} else {
-			return null;
-		}
-	}
-
-	private String quote(String value) {
-		if (value != null) {
-			return "'" + value + "'";
-		} else {
-			return null;
-		}
 	}
 
 	/**
@@ -149,15 +116,7 @@ public class DownloadController {
 		sb.append(PAREN_OPEN).append(CommonConst.CRLF);
 		for (int i = 0; i < descs.size(); i++) {
 			DescriptionWrapper desc = descs.get(i);
-			sb.append(String.format(DESC_TEMPLATE_IN_HTML,
-					desc.getId().toString(),
-					quote(desc.getCreate_name()),
-					quote(desc.getUpdate_name()),
-					desc.getX().toString(),
-					desc.getY().toString(),
-					toString(desc.getWidth()),
-					toString(desc.getHeight()),
-					desc.getHtml()));
+			sb.append(desc.toJSONForHTML());
 			if (i < descs.size() - 1) {
 				sb.append(COMMA)
 						.append(CommonConst.CRLF);
