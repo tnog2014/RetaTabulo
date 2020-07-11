@@ -63,15 +63,20 @@ public class RetaTabuloApplication {
 	@Autowired
 	UserService userService;
 
-	public static void main(String[] args) {
+	@Autowired
+	URIEncodeConverter conv;
+
+	public static void main(String[] args) throws ApplicationException {
 		ConfigurableApplicationContext ctx = SpringApplication.run(
 				RetaTabuloApplication.class, args);
 		RetaTabuloApplication app = ctx.getBean(RetaTabuloApplication.class);
 		app.execStartup(args);
 	}
 
-	public void execStartup(String[] args) {
+	public void execStartup(String[] args) throws ApplicationException {
 		createAdminUser();
+		// Convert descriptions of anold format into a new format.
+		conv.convert();
 	}
 
 	/**

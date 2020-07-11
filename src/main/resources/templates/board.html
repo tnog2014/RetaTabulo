@@ -540,18 +540,25 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 	}
 
 	function encodeJsonUri(input){
-		 console.log("encodeJsonUri start:"+input);
+		// console.log("encodeJsonUri start:"+input);
 		var wk = JSON.stringify(input);
 		wk = encodeURIComponent(wk);
-		 console.log("encodeJsonUri end:"+wk);
+		// console.log("encodeJsonUri end:"+wk);
 		return wk;
 	}
 
 	function decodeJsonUri(input){
-		 console.log("decodeJsonUri start:"+input);
+		// console.log("decodeJsonUri start:"+input);
 		var wk = decodeURIComponent(input);
-		wk = JSON.parse(wk);
-		 console.log("decodeJsonUri end:"+wk);
+		try {
+			wk = JSON.parse(wk);
+		} catch (e) {
+	        console.error(e);
+	        console.error("wk:["+wk+"]")
+	        console.error("input:["+input+"]")
+	        wk = '""';
+	    }
+        // console.log("decodeJsonUri end:"+wk);
 		return wk;
 	}
 
