@@ -74,13 +74,4 @@ CREATE TABLE SPRING_SESSION_ATTRIBUTES (
 	CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES SPRING_SESSION(PRIMARY_ID) ON DELETE CASCADE
 );
 
-INSERT INTO login_user (user_name, password, nickname, valid, level) VALUES
-(
-    'admin',
-    --'password'
-    '$2a$10$2a6LgH1pZj3s0ZMAqJafW.Cd8mceQgBK.nR8FHA6yK8tM09SBJjUm',
-    '管理者',
-    '1',
-    '1'
-);
 
