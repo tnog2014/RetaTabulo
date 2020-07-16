@@ -5,7 +5,7 @@
 
 ### Overview
 
-- RetaTabulo is a online white board application.
+- RetaTabulo is an online white board application.
 - The application provides white boards, on which the users can write, remove and move phrases.
 - The content of a board is shared with all the users on the board.
 - The administrators can create, modify and remove boards and users.

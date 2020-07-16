@@ -251,6 +251,9 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 			$divInner = $('<div class="descInner"></div>');
 			$divName = $ ('<div class="descInfo" style="font-size:9pt;right:0;bottom:-18px;position:absolute">(<span class="create">/</span>/<span class="update"></span>)</div>');
 
+			var show = $("#showUserInfo").prop('checked');
+			setVisibleState($divName, show);
+
 			createName = data.create_name;
 			if(createName == null){
 				createName = "-";
@@ -532,11 +535,7 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 
 	function updateUserInfo(){
 		var show = $("#showUserInfo").prop('checked');
-		if(show == true){
-			$('.descInfo').show();
-		} else {
-			$('.descInfo').hide();
-		}
+		setVisibleState($('.descInfo'), show);
 	}
 
 	function encodeJsonUri(input){
@@ -726,6 +725,14 @@ var DIALOG_TITLE = "[(#{message.board.dialog.title})]";
 		// i.e, after rendering all the description.
 		updateUserInfo();
 	});
+
+	function setVisibleState($object, visibility){
+		if(visibility){
+			$object.show();
+		} else {
+			$object.hide();
+		}
+	}
 
 </script>
   </head>

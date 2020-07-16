@@ -120,6 +120,9 @@ $(function(){
 		}
 	});
 
+	var selectedOption = $('#locales').val();
+	$('#main_form').attr('action', contextPath + 'main?lang='+selectedOption);
+
 });
 </script>
 </html>
